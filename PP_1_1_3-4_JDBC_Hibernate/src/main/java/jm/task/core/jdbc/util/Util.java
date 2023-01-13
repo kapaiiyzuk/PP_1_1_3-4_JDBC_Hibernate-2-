@@ -10,7 +10,7 @@ public class Util {
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String HOST = "jdbc:mysql://localhost:3306/mysql?useSSL=false&allowMultiQueries=true&serverTimezone=UTC";
     private static final String LOGIN = "root";
-    private static final String PASSWORD = "527120963Vl";
+    private static final String PASSWORD = "root";
     private static SessionFactory sessionFactory = null;
 
     public static SessionFactory getConnection() {
