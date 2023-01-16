@@ -2,19 +2,15 @@ package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.CriteriaQuery;
-
-import javax.persistence.criteria.CriteriaUpdate;
-import java.util.ArrayList;
+import org.hibernate.HibernateException;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
     private final SessionFactory sessionFactory = Util.getConnection();
-
 
     public UserDaoHibernateImpl() {
 
@@ -25,7 +21,7 @@ public class UserDaoHibernateImpl implements UserDao {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            session.createSQLQuery("CREATE TABLE IF NOT EXISTS test.users" +
+            session.createNativeQuery("CREATE TABLE IF NOT EXISTS mysql.users" +
                     " (id mediumint not null auto_increment, name VARCHAR(50), " +
                     "lastname VARCHAR(50), " +
                     "age tinyint, " +
@@ -38,7 +34,7 @@ public class UserDaoHibernateImpl implements UserDao {
                 transaction.rollback();
             }
         } finally {
-                session.close();
+            session.close();
         }
     }
 
@@ -47,16 +43,15 @@ public class UserDaoHibernateImpl implements UserDao {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            session.createSQLQuery("Drop table if exists test.users").executeUpdate();
+            session.createNativeQuery("DROP TABLE IF EXISTS mysql.users").executeUpdate();
             transaction.commit();
-            System.out.println("Таблица удалена");
         } catch (HibernateException e) {
             e.printStackTrace();
             if (transaction != null) {
                 transaction.rollback();
             }
         } finally {
-                session.close();
+            session.close();
         }
     }
 
@@ -74,7 +69,7 @@ public class UserDaoHibernateImpl implements UserDao {
                 transaction.rollback();
             }
         } finally {
-                session.close();
+            session.close();
         }
     }
 
@@ -92,28 +87,27 @@ public class UserDaoHibernateImpl implements UserDao {
                 transaction.rollback();
             }
         } finally {
-                session.close();
+            session.close();
         }
     }
 
     @Override
     public List<User> getAllUsers() {
-        List<User> list = new ArrayList<>();
         Session session = sessionFactory.openSession();
+        CriteriaQuery<User> criteriaQuery = session.getCriteriaBuilder().createQuery(User.class);
+        criteriaQuery.from(User.class);
         Transaction transaction = session.beginTransaction();
+        List<User> userList = session.createQuery(criteriaQuery).getResultList();
         try {
-            transaction = session.beginTransaction();
-            list = session.createCriteria(User.class).list();
             transaction.commit();
-        } catch (Exception e) {
+            return userList;
+        } catch (HibernateException e) {
             e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            transaction.rollback();
         } finally {
-                session.close();
+            session.close();
         }
-        return list;
+        return userList;
     }
 
     @Override
@@ -121,9 +115,8 @@ public class UserDaoHibernateImpl implements UserDao {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
-            session.createSQLQuery("TRUNCATE TABLE test.users;").executeUpdate();
+            session.createNativeQuery("TRUNCATE TABLE mysql.users;").executeUpdate();
             transaction.commit();
-            System.out.println("Таблица очищена");
         } catch (HibernateException e) {
             e.printStackTrace();
             if (transaction != null) {
