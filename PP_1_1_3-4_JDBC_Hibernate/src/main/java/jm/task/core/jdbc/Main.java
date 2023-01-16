@@ -3,31 +3,29 @@ package jm.task.core.jdbc;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.service.UserService;
 import jm.task.core.jdbc.service.UserServiceImpl;
-import jm.task.core.jdbc.util.Util;
-
-import java.util.List;
 
 public class Main {
     private static final UserService userService = new UserServiceImpl();
+    private static final User user1 = new User("Shawn", "Mendes", (byte) 30);
+    private static final User user2 = new User("Michael", "Jordan", (byte) 18);
+    private static final User user3 = new User("Johnson", "Dwayne", (byte) 46);
+    private static final User user4 = new User("Harry", "Potter", (byte) 52);
 
     public static void main(String[] args) {
-        // реализуйте алгоритм здесь
         userService.createUsersTable();
 
-        userService.saveUser("Shawn", "Mendes", (byte) 24);
-        userService.saveUser("Justin", "Bieber", (byte) 28);
-        userService.saveUser("Ariana", "Grande", (byte) 29);
-        userService.saveUser("Billie", "Eilish", (byte) 21);
+        userService.saveUser(user1.getName(), user1.getLastName(), user1.getAge());
 
-        userService.removeUserById(3);
+        userService.saveUser(user2.getName(), user2.getLastName(), user2.getAge());
 
-        List<User> strings = userService.getAllUsers();
-        for (User s : strings)
-            System.out.println(s);
+        userService.saveUser(user3.getName(), user3.getLastName(), user3.getAge());
+
+        userService.saveUser(user4.getName(), user4.getLastName(), user4.getAge());
+
+        userService.getAllUsers();
 
         userService.cleanUsersTable();
 
         userService.dropUsersTable();
     }
 }
-
