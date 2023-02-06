@@ -13,6 +13,7 @@ public class Util {
     private static final String LOGIN = "root";
     private static final String PASSWORD = "527120963Vl";
     private static SessionFactory sessionFactory = null;
+    private Util() {}
 
     public static SessionFactory getConnection() {
 
